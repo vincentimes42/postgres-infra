@@ -1,0 +1,55 @@
+
+
+stages:
+  - release
+  - deploy
+
+
+release:
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  stage: release
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never                                  # Do not run this job in a tag pipeline
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH  # Run this job when commits are pushed or merged to the default branch
+  script:
+    - echo "Create release"
+  release:
+    tag_name: 'v0.$CI_PIPELINE_IID'                # The version is incremented per pipeline.
+    description: 'v0.$CI_PIPELINE_IID'
+    ref: '$CI_COMMIT_SHA'                          # The tag is created from the pipeline SHA.
+
+k8s-deploy-staging:
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [ "" ]
+  stage: deploy
+  when: manual
+  script:
+    - echo "Start Deployment" # TODO define access to k8s
+    - kubectl create namespace staging
+    - kubectl delete secret --namespace=staging postgresql-pass
+    - kubectl create secret generic postgresql-pass --from-literal=postgresql-root-password=$DB_ROOT_PASSWORD --from-literal=postgresql-user-password=$DB_PASSWORD
+    - kubectl apply -f deployment.yml --namespace=staging
+  environment:
+    name: staging
+    url: https://example.staging.com
+
+k8s-deploy-production:
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [ "" ]
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_TAG != null #run the job
+      when: manual
+    - when: never
+  script:
+    - echo "Start Deployment" # TODO define access to k8s
+    - kubectl create namespace production
+    - kubectl delete secret --namespace=production postgresql-pass
+    - kubectl create secret generic my-secret --from-literal=key1=supersecret --from-literal=key2=topsecret
+    - kubectl apply -f deployment.yml --namespace=production
+  environment:
+    name: production
+    url: https://example.production.com
