@@ -43,25 +43,25 @@ spec:
         app: postgres
     spec:
       containers:
-        - image: postgresql:5.6
+        - image: postgres:16.0-alpine
           name: postgresql
           env:
-            - name: postgresql_DATABASE
+            - name: POSTGRES_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: postgresql-config-map
                   key: postgresql-database-name
-            - name: postgresql_ROOT_PASSWORD
+            - name: POSTGRES_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgresql-pass
                   key: postgresql-root-password
-            - name: postgresql_USER
+            - name: POSTGRES_USER
               valueFrom:
                 configMapKeyRef:
                   name: postgresql-config-map
                   key: postgresql-user-username
-            - name: postgresql_PASSWORD
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgresql-pass

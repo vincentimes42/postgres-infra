@@ -30,6 +30,7 @@ k8s-deploy-staging:
     - kubectl create namespace staging
     - kubectl delete secret --namespace=staging postgresql-pass
     - kubectl create secret generic postgresql-pass --from-literal=postgresql-root-password=$DB_ROOT_PASSWORD --from-literal=postgresql-user-password=$DB_PASSWORD
+    - kubectl apply -f config-map.yml --namespace=staging
     - kubectl apply -f deployment.yml --namespace=staging
   environment:
     name: staging
