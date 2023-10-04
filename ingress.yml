@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /backend
+          pathType: Prefix
+          backend:
+            service:
+              name: springboot3-example-service
+              port:
+                name: http
+        - path: /db
+          pathType: Prefix
+          backend:
+            service:
+              name: postgresql-service
+              port:
+                name: tcp
+        - path: /front
+          pathType: Prefix
+          backend:
+            service:
+              name: angular-example
+              port:
+                name: http
