@@ -5,4 +5,4 @@ metadata:
 data:
   postgresql-server: postgresql-service    # The name of postgresql service
   postgresql-database-name: demoDb     # The name of the database used by the demo app
-  postgresql-user-username: myUser     # A new created user for the demo app
+  postgresql-user-username: myapplication      # A new created user for the demo app
