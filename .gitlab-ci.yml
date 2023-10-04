@@ -27,9 +27,9 @@ k8s-deploy-staging:
     - echo "Start Deployment" # TODO define access to k8s
     - kubectl create namespace staging
     - kubectl delete secret --namespace=staging postgresql-pass
-    - kubectl create secret generic postgresql-pass --from-literal=postgresql-root-password=$DB_ROOT_PASSWORD --from-literal=postgresql-user-password=$SPRING_POSTGRES_PASSWORD
-    - kubectl apply -f config-map.yml --namespace=staging
-    - kubectl apply -f deployment.yml --namespace=staging
+    - kubectl create secret --namespace=staging generic postgresql-pass --from-literal=postgresql-root-password=$DB_ROOT_PASSWORD --from-literal=postgresql-user-password=$SPRING_POSTGRES_PASSWORD
+    - kubectl apply -f deployment/config-map.yml --namespace=staging
+    - kubectl apply -f deployment/deployment.yml --namespace=staging
   environment:
     name: staging
     url: https://example.staging.com
@@ -48,7 +48,8 @@ k8s-deploy-production:
     - kubectl create namespace production
     - kubectl delete secret --namespace=production postgresql-pass
     - kubectl create secret --namespace=production generic postgresql-pass --from-literal=postgresql-root-password=$DB_ROOT_PASSWORD --from-literal=postgresql-user-password=$SPRING_POSTGRES_PASSWORD
-    - kubectl apply -f deployment.yml --namespace=production
+    - kubectl apply -f deployment/config-map.yml --namespace=production
+    - kubectl apply -f deployment/deployment.yml --namespace=production
   environment:
     name: production
     url: https://example.production.com
